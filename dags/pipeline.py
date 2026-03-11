@@ -1,11 +1,9 @@
 # Imports necessário para a criação do fluxo de trabalho
 from airflow import DAG # principal classe do Airflow
-from airflow.operators.python import PythonOperator #operador que possibilita a execução de funções Python
+from airflow.providers.standard.operators.python import PythonOperator #operador que possibilita a execução de funções Python
 from airflow.providers.postgres.hooks.postgres import PostgresHook #hook do postgres responsável pela conexão com o banco de dados
 from datetime import datetime # exigência do Airflow para criação de DAG
 import pandas as pd
-import csv 
-import os
 
 #Onde o arquivo csv será salvo. /tmp é uma pasta temporária criada dentro do container do Airflow
 csv_path = "/tmp/customers.csv"
@@ -40,7 +38,7 @@ def validate():
 with DAG(
     dag_id = "pipeline_customers",
     start_date = datetime(2024, 1, 1),
-    schedule_interval = "@daily",
+    schedule = "@daily",
     catchup = False,
 ) as dag:
     task_extract = PythonOperator(
@@ -49,7 +47,7 @@ with DAG(
     )
 
     task_load = PythonOperator(
-        task_id = "load_costumers",
+        task_id = "load_customers",
         python_callable = load_customer,
     )
 
