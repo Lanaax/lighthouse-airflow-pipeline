@@ -1,0 +1,22 @@
+services:
+  source_db:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: source_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./northwind.sql:/docker-entrypoint-initdb.d/northwind.sql
+    ports:
+      - 5433:5432
+
+  target_db:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: target_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5434:5432
+
+
